@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const runPromise = (arr, value) =>
+        arr.reduce(
+          (promiseThen, curFn) => promiseThen.then(curFn),
+          Promise.resolve(value)
+        );
+
+      const fn1 = () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(1);
+            resolve(1);
+          }, 2000);
+        });
+      const fn2 = () =>
+        new Promise((resolve, reject) => {
+          setTimeout(() => {
+            console.log(2);
+            resolve(2);
+          }, 1000);
+        });
+
+      runPromise([fn1, fn2], 3);
+
+      const pipe =
+        (...fns) =>
+        (params) =>
+          fns.reduce((acc, cur) => cur(acc), params);
+
+      const toLowerCase = (str) => str.toLowerCase();
+      const addS = (str) => `${str}s`;
+      const addHello = (str) => `Hello ${str}`;
+
+      const pipeResult = pipe(toLowerCase, addS, addHello);
+      console.log(pipeResult);
+      console.log(pipeResult("John"));
+    </script>
+  </body>
+</html>
