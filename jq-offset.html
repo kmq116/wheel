@@ -8,16 +8,12 @@
   </head>
   <body>
     <!-- <div class="b" style="width: 100px;height: 100px"></div> -->
-    <!-- <div class="b" style="width: 100px;height: 100px"></div> -->
-    <div class="b" id="div">I am div</div>
-    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
-    <script>
-      const div = $("#div");
-      console.log(div.position(), "jq position");
-      console.log(div.offset(), "jq offset");
-      console.log(div.height(), "jq height");
-      console.log(document.getElementById("div").offsetTop, "dom offsetTop");
-    </script>
+    <div
+      class="b"
+      style="width: 100px; height: 100px; position: fixed; top: 200px"
+    >
+      <div class="b" id="div">I am div</div>
+    </div>
     <style>
       .b {
         border: 1px solid gray;
@@ -28,5 +24,49 @@
         padding: 0;
       }
     </style>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.js"></script>
+    <script>
+      const div = document.getElementById("div");
+
+      const offset = (ele) => {
+        let result = {
+          left: 0,
+          top: 0,
+        };
+        const getOffset = (node, init) => {
+          if (node.nodeType !== 1) return;
+          position = getPosition(node);
+
+          if (typeof init === "undefined" && position === "static") {
+            getOffset(node.parentNode);
+            return;
+          }
+
+          result.top = node.offsetTop + result.top - node.scrollTop;
+          result.left = node.offsetLeft + result.left - node.scrollLeft;
+
+          if (position === "fixed") {
+            return;
+          }
+          getOffset(node.parentNode);
+        };
+        if (getDisplay(ele) === "none") {
+          return result;
+        }
+
+        let position;
+        getOffset(ele, true);
+
+        return result;
+      };
+      console.log(offset(div));
+      function getDisplay(node) {
+        return window.getComputedStyle(node).display;
+      }
+
+      function getPosition(node) {
+        return window.getComputedStyle(node).position;
+      }
+    </script>
   </body>
 </html>
