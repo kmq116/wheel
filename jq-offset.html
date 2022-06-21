@@ -30,43 +30,27 @@
 
       const offset = (ele) => {
         let result = {
-          left: 0,
           top: 0,
+          left: 0,
         };
-        const getOffset = (node, init) => {
-          if (node.nodeType !== 1) return;
-          position = getPosition(node);
-
-          if (typeof init === "undefined" && position === "static") {
-            getOffset(node.parentNode);
-            return;
-          }
-
-          result.top = node.offsetTop + result.top - node.scrollTop;
-          result.left = node.offsetLeft + result.left - node.scrollLeft;
-
-          if (position === "fixed") {
-            return;
-          }
-          getOffset(node.parentNode);
-        };
-        if (getDisplay(ele) === "none") {
+        if (!ele.getClientRects().length) {
           return result;
         }
 
-        let position;
-        getOffset(ele, true);
+        if (window.getComputedStyle(ele).display === "none") {
+          return result;
+        }
 
-        return result;
+        result = ele.getBoundingClientRect();
+        const docElement = ele.ownerDocument.documentElement;
+
+        return {
+          top: result.top + window.pageXOffset - docElement.clientTop,
+          left: result.left + window.pageYOffset - docElement.clientLeft,
+        };
       };
-      console.log(offset(div));
-      function getDisplay(node) {
-        return window.getComputedStyle(node).display;
-      }
 
-      function getPosition(node) {
-        return window.getComputedStyle(node).position;
-      }
+      console.log(offset(div));
     </script>
   </body>
 </html>
