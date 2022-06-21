@@ -7,7 +7,14 @@
     <title>Document</title>
   </head>
   <body>
+    <script src="./reduce.js"></script>
     <script>
+      const a = [1, 2, 3].reduce(function (prev, curr, index, arr) {
+        return prev + curr;
+      });
+      console.log(a);
+    </script>
+    <!-- <script>
       const runPromise = (arr, value) =>
         arr.reduce(
           (promiseThen, curFn) => promiseThen.then(curFn),
@@ -43,6 +50,6 @@
       const pipeResult = pipe(toLowerCase, addS, addHello);
       console.log(pipeResult);
       console.log(pipeResult("John"));
-    </script>
+    </script> -->
   </body>
 </html>
